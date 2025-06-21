@@ -61,49 +61,23 @@ Visit [http://localhost:3000](http://localhost:3000) to view the app.
 ## 📁 Folder Structure
 
 ```
-/toolnest-frontend
-├── public/                        # Static assets (icons, images, etc.)
-├── pages/                         # Next.js route pages
-│   ├── _app.tsx                   # Root component
-│   ├── index.tsx                  # Dashboard or Landing
-│   ├── auth/                      # Auth routes
-│   │   ├── login.tsx
-│   │   ├── signup.tsx
-│   │   └── otp.tsx
-│   └── tasks/                     # Task-related routes
-│       ├── index.tsx
-│       └── [taskId].tsx
-│
-├── components/                   # Generic UI components
-│   ├── common/                   # Buttons, Modals, Inputs, etc.
-│   └── layout/                   # Navbar, Sidebar, Layout wrappers
-│
-├── features/                     # Domain-level logic (SOLID focused)
-│   ├── auth/
-│   │   ├── components/           # Feature-specific UI components
-│   │   ├── hooks/                # Feature-specific hooks
-│   │   ├── services/             # API calls related to auth
-│   │   └── types.ts              # Auth-specific types
-│   ├── tasks/
-│   │   ├── components/           # TaskCard, TaskForm
-│   │   ├── hooks/                # useTasks, useDailyTasks
-│   │   ├── services/             # API interaction (axios)
-│   │   └── types.ts
-│   └── ...                       # Future features (analytics, etc.)
-│
-├── hooks/                        # Global custom hooks
-├── services/                     # Axios clients, auth interceptors
-├── store/                        # Global state management (Zustand/Context)
-├── utils/                        # Helper functions
-├── constants/                    # Static constants (enums, configs)
-├── types/                        # Global TypeScript types
-├── styles/                       # Global styles (Tailwind config, etc.)
-├── middleware.ts                 # Route guards (optional)
-├── env.d.ts                      # TypeScript typing for env vars
-├── tailwind.config.js            # Tailwind setup
-├── tsconfig.json                 # TypeScript config
-├── next.config.js                # Next.js config
-└── .env.local                    # Local environment variables
+src/
+├── app/                 → Next.js App Router pages (already exists)
+├── components/
+│   └── common/          → Buttons, Cards, Modals, Loaders, etc.
+├── features/
+│   ├── auth/            → Login, Signup, OTP verification UI + API
+│   └── tasks/           → Task, DailyTask, TaskInstance UIs + logic
+│       ├── components/
+│       ├── services/
+│       ├── hooks/
+│       └── types/
+├── hooks/               → Global custom hooks (e.g., useMounted, useAuth)
+├── layouts/             → AppShell, AuthLayout (for persistent UI)
+├── services/            → Global API layer (axios.ts, etc.)
+├── store/               → Zustand stores (authStore, taskStore)
+├── styles/              → Tailwind, globals.css (already there)
+├── utils/               → formatDate, parsePriority, etc.
 
 ```
 
