@@ -62,26 +62,49 @@ Visit [http://localhost:3000](http://localhost:3000) to view the app.
 
 ```
 /toolnest-frontend
+├── public/                        # Static assets (icons, images, etc.)
+├── pages/                         # Next.js route pages
+│   ├── _app.tsx                   # Root component
+│   ├── index.tsx                  # Dashboard or Landing
+│   ├── auth/                      # Auth routes
+│   │   ├── login.tsx
+│   │   ├── signup.tsx
+│   │   └── otp.tsx
+│   └── tasks/                     # Task-related routes
+│       ├── index.tsx
+│       └── [taskId].tsx
 │
-├── public/                 # Static assets
-├── pages/                 # Next.js pages
-│   ├── index.tsx          # Homepage or Dashboard
-│   ├── auth/              # Login, Signup, OTP views
-│   └── tasks/             # Task, DailyTask, TaskInstance UIs
+├── components/                   # Generic UI components
+│   ├── common/                   # Buttons, Modals, Inputs, etc.
+│   └── layout/                   # Navbar, Sidebar, Layout wrappers
 │
-├── components/            # Reusable UI components
-│   └── common/            # Buttons, Inputs, Cards, etc.
-│
-├── features/              # Feature modules (auth, tasks, etc.)
+├── features/                     # Domain-level logic (SOLID focused)
 │   ├── auth/
-│   └── tasks/
+│   │   ├── components/           # Feature-specific UI components
+│   │   ├── hooks/                # Feature-specific hooks
+│   │   ├── services/             # API calls related to auth
+│   │   └── types.ts              # Auth-specific types
+│   ├── tasks/
+│   │   ├── components/           # TaskCard, TaskForm
+│   │   ├── hooks/                # useTasks, useDailyTasks
+│   │   ├── services/             # API interaction (axios)
+│   │   └── types.ts
+│   └── ...                       # Future features (analytics, etc.)
 │
-├── hooks/                 # Custom React hooks
-├── services/              # Axios API clients
-├── store/                 # Global state (context or Redux)
-├── styles/                # Tailwind or CSS modules
-├── utils/                 # Helper functions
-└── types/                 # TypeScript types/interfaces
+├── hooks/                        # Global custom hooks
+├── services/                     # Axios clients, auth interceptors
+├── store/                        # Global state management (Zustand/Context)
+├── utils/                        # Helper functions
+├── constants/                    # Static constants (enums, configs)
+├── types/                        # Global TypeScript types
+├── styles/                       # Global styles (Tailwind config, etc.)
+├── middleware.ts                 # Route guards (optional)
+├── env.d.ts                      # TypeScript typing for env vars
+├── tailwind.config.js            # Tailwind setup
+├── tsconfig.json                 # TypeScript config
+├── next.config.js                # Next.js config
+└── .env.local                    # Local environment variables
+
 ```
 
 ---
