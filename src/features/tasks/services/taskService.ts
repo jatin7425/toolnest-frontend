@@ -15,10 +15,21 @@ const getEndpoint = (type: "single" | "daily" | "instance") => {
 };
 
 // Generic CRUD for all task types
-export const getAllTasks = async (type: "single" | "daily" | "instance") => {
-  const res = await axiosInstance.get(getEndpoint(type));
+export const getAllTasks = async (
+  type: "single" | "daily" | "instance",
+  page: number | null = null,
+  ordering: string | null = null
+) => {
+  const params = new URLSearchParams();
+  if (page !== null && page > 1) params.append("page", page.toString());
+  if (ordering) params.append("ordering", ordering);
+
+  const endpoint = getEndpoint(type);
+  const url = params.toString() ? `${endpoint}?${params.toString()}` : endpoint;
+  const res = await axiosInstance.get(url);
   return res.data;
 };
+
 
 export const getTaskById = async (type: "single" | "daily" | "instance", id: number) => {
   const res = await axiosInstance.get(`${getEndpoint(type)}${id}/`);
