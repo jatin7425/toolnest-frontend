@@ -1,9 +1,11 @@
 "use client";
 
+import Link from 'next/link';
 import { useState, useEffect, Fragment } from "react";
 import Header from "@/components/Header";
 import { Button } from "@/components/ui/button";
 import { Tittle } from "@/components/ui/tittle";
+import { useSearchParams, useRouter } from "next/navigation";
 import { getAllTasks, updateTask } from "@/features/tasks/services/taskService"
 import { Calendar1Icon, ListTodo, Plus, Repeat, Sparkles } from "lucide-react";
 import { Loader } from "@/components/ui/loader";
@@ -12,25 +14,21 @@ import { Dialog, Transition } from "@headlessui/react";
 
 const TOOLNAME = "Task Manager";
 
-const taskMap = [
+export const taskMap = [
     { type: "single", label: "Single Task", icon: <ListTodo className="w-4 h-4" /> },
     { type: "daily", label: "Daily Task", icon: <Repeat className="w-4 h-4" /> },
     { type: "instance", label: "Task Instance", icon: <Sparkles className="w-4 h-4" /> },
 ] as const;
 
-const priority = [
-    "very high",
-    "high",
-    "medium",
-    "low",
-    "very low"
-]
+const priority = ["very high", "high", "medium", "low", "very low"]
 
 export default function TaskManagerPage() {
     const [taskListLoading, setTaskListLoading] = useState<boolean>(false);
     const [screenWidth, setScreenWidth] = useState<number>(0);
     const [sidebar, setSidebar] = useState<boolean>(true);
-    const [taskType, setTaskType] = useState<(typeof taskMap)[number]["type"]>("single");
+    const searchParams = useSearchParams();
+    const router = useRouter();
+    const taskType = (searchParams.get("taskType") || "single") as (typeof taskMap)[number]["type"];
     const [tasks, setTasks] = useState<any[]>([]);
     const [hasNext, setHasNext] = useState(false)
     const [hasPrev, setHasPrev] = useState(false)
@@ -53,22 +51,30 @@ export default function TaskManagerPage() {
     }, []);
 
     useEffect(() => {
-        const fetchTasks = async () => {
+        const controller = new AbortController();
+        const timer = setTimeout(async () => {
             try {
-                setTaskListLoading(true)
-                const data = await getAllTasks(taskType, page, ordering);
+                setTaskListLoading(true);
+                const data = await getAllTasks(taskType, page, ordering, { signal: controller.signal });
                 setTasks(data.results);
                 setHasNext(Boolean(data.next));
                 setHasPrev(Boolean(data.previous));
-                extractKeysFromResults(data.results)
-            } catch (error) {
-                console.error("Failed to fetch paginated tasks:", error);
+                extractKeysFromResults(data.results);
+            } catch (error: any) {
+                if (error.name !== "CanceledError") {
+                    console.error("Failed to fetch paginated tasks:", error);
+                }
             } finally {
-                setTaskListLoading(false)
+                setTaskListLoading(false);
             }
+        }, 200); // Delay by 200ms
+
+        return () => {
+            controller.abort();
+            clearTimeout(timer);
         };
-        fetchTasks();
     }, [taskType, page, ordering]);
+
 
     const handlePriorityChange = async (taskId: number, newPriority: string) => {
         const current = tasks.find(task => task.id === taskId)?.priority;
@@ -144,7 +150,7 @@ export default function TaskManagerPage() {
                                 key={type}
                                 className={`cursor-pointer flex items-center gap-2 p-3 border-b hover:bg-gray-100 whitespace-nowrap ${taskType === type ? "bg-purple-100 font-bold text-purple-700" : ""
                                     }`}
-                                onClick={() => setTaskType(type)}
+                                onClick={() => router.push(`/tasks_manager?taskType=${type}`)}
                             >
                                 {icon}
                                 {sidebar && <span>{label}</span>}
@@ -157,7 +163,9 @@ export default function TaskManagerPage() {
                 <div className="flex-1 flex-col px-6 py-4">
                     <div className="flex justify-between px-4">
                         <h2 className="text-xl font-semibold mb-4 capitalize ml-4">{taskType} Tasks</h2>
-                        <Plus />
+                        <Link href={`/tasks_manager/create?taskType=${taskType}`}>
+                            <Plus />
+                        </Link>
                     </div>
                     <div
                         className="w-full flex flex-col gap-2"
@@ -174,7 +182,7 @@ export default function TaskManagerPage() {
                                     <div className="h-4 absolute top-0 left-0 w-full bg-white z-10 pointer-events-none" />
 
                                     {/* Task list */}
-                                    {tasks && tasks.map((task: any) => (
+                                    {tasks ? (tasks.map((task: any) => (
                                         <div
                                             key={task.id}
                                             className="border p-3 rounded shadow-sm bg-gray-50 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2"
@@ -202,7 +210,11 @@ export default function TaskManagerPage() {
                                                 </select>
                                             </div>
                                         </div>
-                                    ))}
+                                    ))):(
+                                        <div className='w-full h-full flex items-center justify-center'>
+                                            <p className='text-gray-500 font-xl'>No Task Available</p>
+                                        </div>
+                                    )}
 
                                     {/* Bottom fade */}
                                     <div className="h-4 absolute bottom-0 left-0 w-full bg-white z-10 pointer-events-none" />
