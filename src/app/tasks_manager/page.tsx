@@ -62,9 +62,17 @@ export default function TaskManagerPage() {
                 setHasNext(Boolean(data.next));
                 setHasPrev(Boolean(data.previous));
                 extractKeysFromResults(data.results);
-            } catch (error: unknown) {
-                if (error.name !== "CanceledError") {
-                    console.error("Failed to fetch paginated tasks:", error);
+            } catch (err: unknown) {
+                if (
+                    err &&
+                    typeof err === "object" &&
+                    "response" in err &&
+                    "name" in err &&
+                    typeof (err as any).name === "string"
+                ) {
+                    if ((err as any).name !== "CanceledError") {
+                        console.error("Failed to fetch paginated tasks:", err);
+                    }
                 }
             } finally {
                 setTaskListLoading(false);

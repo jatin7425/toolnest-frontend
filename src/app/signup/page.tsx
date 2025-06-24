@@ -25,8 +25,14 @@ export default function SignupPage() {
             // Redirect to login or dashboard after success
             router.push("/");
         } catch (err: unknown) {
-            setError(err.response?.data?.detail || "Signup failed");
+            if (err && typeof err === "object" && "response" in err) {
+                const axiosErr = err as { response?: { data?: { detail?: string } } };
+                setError(axiosErr.response?.data?.detail || "Signup failed");
+            } else {
+                setError("Signup failed");
+            }
         }
+
     };
 
     return (
