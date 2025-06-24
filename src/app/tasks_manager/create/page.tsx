@@ -5,8 +5,10 @@ import { useState, FormEvent } from "react";
 import Link from "next/link";
 import { ArrowBigLeft } from "lucide-react";
 import { createTask } from "@/features/tasks/services/taskService";
-import { TaskType, TaskRequest, DailyTaskRequest, TaskInstanceRequest } from "@/features/tasks/types";
+import { TaskRequest, DailyTaskRequest, TaskInstanceRequest } from "@/features/tasks/types";
 import { Loader } from "@/components/ui/loader";
+import { taskMap } from "@/constants";
+type TaskType = (typeof taskMap)[number]["type"];
 
 type FormData = {
     title: string;

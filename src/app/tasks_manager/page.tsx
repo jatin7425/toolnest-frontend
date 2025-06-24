@@ -10,14 +10,12 @@ import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { getAllTasks, updateTask } from "@/features/tasks/services/taskService"
 import { ListTodo, LucideHome, PanelLeftClose, PanelLeftOpen, Plus, Repeat, Sparkles } from "lucide-react";
 import { Loader } from "@/components/ui/loader";
-import { TaskRequest, DailyTaskRequest, TaskInstanceRequest } from '@/features/tasks/types'
+import { TaskRequest, DailyTaskRequest, TaskInstanceRequest, TaskUnion } from '@/features/tasks/types'
 import { TaskDetsModal } from '@/components/TaskDetsModal';
 
 const TOOLNAME = "Task Manager";
 
 const priority = ["very high", "high", "medium", "low", "very low"]
-
-type TaskUnion = TaskRequest | DailyTaskRequest | TaskInstanceRequest;
 
 const iconMap = {
     ListTodo: <ListTodo className="w-4 h-4" />,
@@ -94,10 +92,10 @@ export default function TaskManagerPage() {
 
         try {
             setTaskListLoading(true)
-            await updateTask(taskType, taskId, { priority: newPriority });
+            await updateTask(taskType, taskId, { priority: newPriority as TaskUnion["priority"] });
             setTasks(prev =>
                 prev.map(task =>
-                    task.id === taskId ? { ...task, priority: newPriority } : task
+                    task.id === taskId ? { ...task, priority: newPriority as TaskUnion["priority"] } : task
                 )
             );
         } catch (err) {
