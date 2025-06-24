@@ -8,7 +8,7 @@ import Link from "next/link";
 import { ChevronDown } from "lucide-react";
 
 export default function Home() {
-  const [tools, setTools] = useState<any[]>([]);
+  const [tools, setTools] = useState<unknown[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {

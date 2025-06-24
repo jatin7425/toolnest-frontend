@@ -30,7 +30,7 @@ export default function TaskManagerPage() {
     const router = useRouter();
     const pathname = usePathname();
     const taskType = (searchParams.get("taskType") || "single") as (typeof taskMap)[number]["type"];
-    const [tasks, setTasks] = useState<any[]>([]);
+    const [tasks, setTasks] = useState<unknown[]>([]);
     const [hasNext, setHasNext] = useState(false)
     const [hasPrev, setHasPrev] = useState(false)
     const [page, setPage] = useState(1);
@@ -61,7 +61,7 @@ export default function TaskManagerPage() {
                 setHasNext(Boolean(data.next));
                 setHasPrev(Boolean(data.previous));
                 extractKeysFromResults(data.results);
-            } catch (error: any) {
+            } catch (error: unknown) {
                 if (error.name !== "CanceledError") {
                     console.error("Failed to fetch paginated tasks:", error);
                 }
@@ -97,7 +97,7 @@ export default function TaskManagerPage() {
     };
 
 
-    const extractKeysFromResults = (results: any[]) => {
+    const extractKeysFromResults = (results: unknown[]) => {
         const allKeys = new Set<string>();
 
         results.forEach((item) => {
@@ -189,7 +189,7 @@ export default function TaskManagerPage() {
                                     <div className="h-4 absolute top-0 left-0 w-full bg-white z-10 pointer-events-none" />
 
                                     {/* Task list */}
-                                    {tasks ? (tasks.map((task: any) => (
+                                    {tasks ? (tasks.map((task: unknown) => (
                                         <div
                                             key={task.id}
                                             className="border p-3 rounded shadow-sm bg-gray-50 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2"
