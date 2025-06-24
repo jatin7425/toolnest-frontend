@@ -17,6 +17,12 @@ const TOOLNAME = "Task Manager";
 
 const priority = ["very high", "high", "medium", "low", "very low"]
 
+const iconMap = {
+    ListTodo: <ListTodo className="w-4 h-4" />,
+    Repeat: <Repeat className="w-4 h-4" />,
+    Sparkles: <Sparkles className="w-4 h-4" />,
+} as const;
+
 export default function TaskManagerPage() {
     const [taskListLoading, setTaskListLoading] = useState<boolean>(false);
     const [screenWidth, setScreenWidth] = useState<number>(0);
@@ -148,14 +154,14 @@ export default function TaskManagerPage() {
                             <LucideHome className='w-4 h-4' /> {sidebar && <span>Dashboard</span>}
                         </li>
 
-                        {taskMap.map(({ type, label, icon }) => (
+                        {taskMap.map(({ type, label, iconName }) => (
                             <li
                                 key={type}
                                 className={`cursor-pointer flex items-center gap-2 p-3 border-b hover:bg-gray-100 whitespace-nowrap ${taskType === type ? "bg-purple-100 font-bold text-purple-700" : ""
                                     }`}
                                 onClick={() => router.push(`/tasks_manager?taskType=${type}`)}
                             >
-                                {icon}
+                                {iconMap[iconName]}
                                 {sidebar && <span>{label}</span>}
                             </li>
                         ))}
