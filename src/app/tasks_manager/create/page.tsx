@@ -1,12 +1,15 @@
 "use client";
 
 import { useSearchParams, useRouter } from "next/navigation";
-import { useState, FormEvent } from "react";
+import { useState, FormEvent, Suspense } from "react";
 import Link from "next/link";
 import { ArrowBigLeft } from "lucide-react";
 import { createTask } from "@/features/tasks/services/taskService";
-import { TaskType, TaskRequest, DailyTaskRequest, TaskInstanceRequest } from "@/features/tasks/types";
+import { TaskRequest, DailyTaskRequest, TaskInstanceRequest } from "@/features/tasks/types";
 import { Loader } from "@/components/ui/loader";
+import { taskMap } from "@/constants";
+
+type TaskType = (typeof taskMap)[number]["type"];
 
 type FormData = {
     title: string;
@@ -30,7 +33,7 @@ const defaultForm: FormData = {
 
 const tabOptions: TaskType[] = ["single", "daily", "instance"];
 
-export default function CreateTaskPage() {
+function CreateTaskPageInner() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const typeParam = (searchParams.get("taskType") || "single") as TaskType;
@@ -41,10 +44,10 @@ export default function CreateTaskPage() {
     const handleChange = (
         e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
     ) => {
-        const { name, value, type: inputType, checked } = e.target;
-
+        const { name, value, type: inputType } = e.target as HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;
         if (inputType === "checkbox" && name === "weekdays") {
-            const updated = checked
+            const input = e.target as HTMLInputElement;
+            const updated = input.checked
                 ? [...(form.weekdays || []), value]
                 : (form.weekdays || []).filter((day) => day !== value);
             setForm({ ...form, weekdays: updated });
@@ -122,8 +125,8 @@ export default function CreateTaskPage() {
                     <button
                         key={type}
                         className={`capitalize px-4 py-2 rounded ${typeParam === type
-                                ? "bg-purple-600 text-white"
-                                : "bg-gray-200 text-gray-800 hover:bg-gray-300"
+                            ? "bg-purple-600 text-white"
+                            : "bg-gray-200 text-gray-800 hover:bg-gray-300"
                             }`}
                         onClick={() => handleTabChange(type)}
                     >
@@ -234,5 +237,13 @@ export default function CreateTaskPage() {
                 </form>
             )}
         </div>
+    );
+}
+
+export default function CreateTaskPage() {
+    return (
+        <Suspense fallback={<div>Loading...</div>}>
+            <CreateTaskPageInner />
+        </Suspense>
     );
 }

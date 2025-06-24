@@ -23,10 +23,14 @@ export default function LoginPage() {
       saveToken(res.data.token);
 
       // Handle token/session storage if needed here
-
       router.push("/"); // or wherever you redirect after login
     } catch (err: unknown) {
-      setError(err.response?.data?.detail || "Login failed");
+      if (typeof err === "object" && err !== null && "response" in err) {
+        const axiosErr = err as { response?: { data?: { detail?: string } } };
+        setError(axiosErr.response?.data?.detail || "Login failed");
+      } else {
+        setError("Login failed");
+      }
     }
   };
 
