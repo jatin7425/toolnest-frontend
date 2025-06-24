@@ -57,7 +57,7 @@ export default function TaskManagerPage() {
         const timer = setTimeout(async () => {
             try {
                 setTaskListLoading(true);
-                const data = await getAllTasks(taskType, page, ordering, { signal: controller.signal });
+                const data = await getAllTasks(taskType, page, ordering);
                 setTasks(data.results);
                 setHasNext(Boolean(data.next));
                 setHasPrev(Boolean(data.previous));
