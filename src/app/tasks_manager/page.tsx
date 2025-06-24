@@ -17,6 +17,8 @@ const TOOLNAME = "Task Manager";
 
 const priority = ["very high", "high", "medium", "low", "very low"]
 
+type TaskUnion = TaskRequest | DailyTaskRequest | TaskInstanceRequest;
+
 const iconMap = {
     ListTodo: <ListTodo className="w-4 h-4" />,
     Repeat: <Repeat className="w-4 h-4" />,
@@ -31,7 +33,7 @@ export default function TaskManagerPage() {
     const router = useRouter();
     const pathname = usePathname();
     const taskType = (searchParams.get("taskType") || "single") as (typeof taskMap)[number]["type"];
-    const [tasks, setTasks] = useState<unknown[]>([]);
+    const [tasks, setTasks] = useState<TaskUnion[]>([]);
     const [hasNext, setHasNext] = useState(false)
     const [hasPrev, setHasPrev] = useState(false)
     const [page, setPage] = useState(1);
@@ -198,7 +200,7 @@ export default function TaskManagerPage() {
                                     <div className="h-4 absolute top-0 left-0 w-full bg-white z-10 pointer-events-none" />
 
                                     {/* Task list */}
-                                    {tasks ? (tasks.map((task: unknown) => (
+                                    {tasks ? (tasks.map((task) => (
                                         <div
                                             key={task.id}
                                             className="border p-3 rounded shadow-sm bg-gray-50 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2"
