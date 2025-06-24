@@ -1,3 +1,5 @@
+export type TaskType = "single" | "daily" | "instance";
+
 export interface BaseTaskFields {
   title: string;
   description: string;
