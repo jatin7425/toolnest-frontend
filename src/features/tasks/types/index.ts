@@ -18,4 +18,8 @@ export interface DailyTaskRequest extends BaseTaskFields {
   is_active: boolean;
 }
 
-export type TaskInstanceRequest = BaseTaskFields;
+export interface TaskInstanceRequest extends BaseTaskFields {
+  daily_task: number;
+  date: string;
+}
+
