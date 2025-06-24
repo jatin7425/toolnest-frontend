@@ -5,9 +5,9 @@ import { useState, useEffect, Fragment } from "react";
 import Header from "@/components/Header";
 import { Button } from "@/components/ui/button";
 import { Tittle } from "@/components/ui/tittle";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { getAllTasks, updateTask } from "@/features/tasks/services/taskService"
-import { Calendar1Icon, ListTodo, Plus, Repeat, Sparkles } from "lucide-react";
+import { Calendar1Icon, CrossIcon, Hamburger, HamburgerIcon, ListTodo, LucideHome, PanelLeftClose, PanelLeftOpen, Plus, Repeat, Sparkles } from "lucide-react";
 import { Loader } from "@/components/ui/loader";
 import { TaskRequest, DailyTaskRequest, TaskInstanceRequest } from '@/features/tasks/types'
 import { Dialog, Transition } from "@headlessui/react";
@@ -28,6 +28,7 @@ export default function TaskManagerPage() {
     const [sidebar, setSidebar] = useState<boolean>(true);
     const searchParams = useSearchParams();
     const router = useRouter();
+    const pathname = usePathname();
     const taskType = (searchParams.get("taskType") || "single") as (typeof taskMap)[number]["type"];
     const [tasks, setTasks] = useState<any[]>([]);
     const [hasNext, setHasNext] = useState(false)
@@ -124,18 +125,18 @@ export default function TaskManagerPage() {
             >
                 {/* Sidebar */}
                 <div
-                    className={`transition-all duration-300 h-full z-50 ${sidebar ? "w-64" : "w-10 max-md:w-0"
+                    className={`transition-all duration-300 h-full max-md:z-50 ${sidebar ? "w-64" : "w-10 max-md:w-0"
                         } overflow-hidden bg-white shadow-md relative max-md:fixed top-0`}
                 >
                     {/* Toggle Button */}
-                    <div className="w-full flex justify-end py-2 bg-gray-100 border-b">
+                    <div className="w-full flex justify-end py-2 bg-gray-100 border-b md:-mt-5">
                         <Button
                             size="sm"
                             variant="ghost"
-                            className={`max-md:fixed left-2 max-md:top-3 ${sidebar && "left-64"}`}
+                            className={`transition-all duration-300 fixed max-md:top-3 top-21 ${sidebar ? "left-64 md:left-70" : "md:left-14 left-3"}`}
                             onClick={() => setSidebar((prev) => !prev)}
                         >
-                            {sidebar ? "◀" : "▶"}
+                            {sidebar ? <PanelLeftClose className='size-10x' /> : <PanelLeftOpen className='size-10x' />}
                         </Button>
                         {sidebar && (
                             <div className="w-full py-5 flex items-center justify-center md:hidden">
@@ -143,9 +144,16 @@ export default function TaskManagerPage() {
                             </div>
                         )}
                     </div>
-
                     <ul>
-                        {taskMap?.map(({ type, label, icon }) => (
+                        <li
+                            className={`cursor-pointer flex items-center gap-2 p-3 border-b hover:bg-gray-100 whitespace-nowrap ${pathname === "/" ? "bg-purple-100 font-bold text-purple-700" : ""
+                                }`}
+                            onClick={() => router.push(`/`)}
+                        >
+                            <LucideHome className='w-4 h-4' /> {sidebar && <span>Dashboard</span>}
+                        </li>
+
+                        {taskMap.map(({ type, label, icon }) => (
                             <li
                                 key={type}
                                 className={`cursor-pointer flex items-center gap-2 p-3 border-b hover:bg-gray-100 whitespace-nowrap ${taskType === type ? "bg-purple-100 font-bold text-purple-700" : ""
@@ -158,7 +166,6 @@ export default function TaskManagerPage() {
                         ))}
                     </ul>
                 </div>
-
                 {/* Main Content */}
                 <div className="flex-1 flex-col px-6 py-4">
                     <div className="flex justify-between px-4">
@@ -210,7 +217,7 @@ export default function TaskManagerPage() {
                                                 </select>
                                             </div>
                                         </div>
-                                    ))):(
+                                    ))) : (
                                         <div className='w-full h-full flex items-center justify-center'>
                                             <p className='text-gray-500 font-xl'>No Task Available</p>
                                         </div>
