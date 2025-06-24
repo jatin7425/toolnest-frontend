@@ -1,13 +1,14 @@
 "use client";
 
 import { useSearchParams, useRouter } from "next/navigation";
-import { useState, FormEvent } from "react";
+import { useState, FormEvent, Suspense } from "react";
 import Link from "next/link";
 import { ArrowBigLeft } from "lucide-react";
 import { createTask } from "@/features/tasks/services/taskService";
 import { TaskRequest, DailyTaskRequest, TaskInstanceRequest } from "@/features/tasks/types";
 import { Loader } from "@/components/ui/loader";
 import { taskMap } from "@/constants";
+
 type TaskType = (typeof taskMap)[number]["type"];
 
 type FormData = {
@@ -32,7 +33,7 @@ const defaultForm: FormData = {
 
 const tabOptions: TaskType[] = ["single", "daily", "instance"];
 
-export default function CreateTaskPage() {
+function CreateTaskPageInner() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const typeParam = (searchParams.get("taskType") || "single") as TaskType;
@@ -236,5 +237,13 @@ export default function CreateTaskPage() {
                 </form>
             )}
         </div>
+    );
+}
+
+export default function CreateTaskPage() {
+    return (
+        <Suspense fallback={<div>Loading...</div>}>
+            <CreateTaskPageInner />
+        </Suspense>
     );
 }
