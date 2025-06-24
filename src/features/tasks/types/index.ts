@@ -12,17 +12,18 @@ export interface BaseTaskFields {
   updated_at?: string;
 }
 
-export interface TaskRequest extends BaseTaskFields {
+export interface TaskRequest extends Omit<BaseTaskFields, 'id'> {
   due_date: string; // ISO 8601
 }
 
-export interface DailyTaskRequest extends BaseTaskFields {
+export interface DailyTaskRequest extends Omit<BaseTaskFields, 'id'> {
   weekdays: string[]; // or `{ [key: string]: boolean }`
   is_active: boolean;
 }
 
-export interface TaskInstanceRequest extends BaseTaskFields {
+export interface TaskInstanceRequest extends Omit<BaseTaskFields, 'id'> {
   daily_task: number;
   date: string;
 }
+
 
