@@ -1,12 +1,15 @@
 export type TaskType = "single" | "daily" | "instance";
 
 export interface BaseTaskFields {
+  id: number;
   title: string;
   description: string;
   priority: "very low" | "low" | "medium" | "high" | "very high";
   smart_priority: boolean;
   postponed_count: number;
   is_completed: boolean;
+  created_at?: string;
+  updated_at?: string;
 }
 
 export interface TaskRequest extends BaseTaskFields {

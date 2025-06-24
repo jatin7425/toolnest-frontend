@@ -108,7 +108,7 @@ export default function TaskManagerPage() {
     };
 
 
-    const extractKeysFromResults = (results: unknown[]) => {
+    const extractKeysFromResults = (results: TaskUnion[]) => {
         const allKeys = new Set<string>();
 
         results.forEach((item) => {
