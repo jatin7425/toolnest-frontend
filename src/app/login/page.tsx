@@ -25,7 +25,7 @@ export default function LoginPage() {
       // Handle token/session storage if needed here
 
       router.push("/"); // or wherever you redirect after login
-    } catch (err: any) {
+    } catch (err: unknown) {
       setError(err.response?.data?.detail || "Login failed");
     }
   };

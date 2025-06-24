@@ -24,7 +24,7 @@ export default function SignupPage() {
 
             // Redirect to login or dashboard after success
             router.push("/");
-        } catch (err: any) {
+        } catch (err: unknown) {
             setError(err.response?.data?.detail || "Signup failed");
         }
     };
