@@ -5,20 +5,15 @@ import { useState, useEffect, Fragment } from "react";
 import Header from "@/components/Header";
 import { Button } from "@/components/ui/button";
 import { Tittle } from "@/components/ui/tittle";
+import { taskMap } from "@/constants";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { getAllTasks, updateTask } from "@/features/tasks/services/taskService"
-import { Calendar1Icon, CrossIcon, Hamburger, HamburgerIcon, ListTodo, LucideHome, PanelLeftClose, PanelLeftOpen, Plus, Repeat, Sparkles } from "lucide-react";
+import { Calendar1Icon, ListTodo, LucideHome, PanelLeftClose, PanelLeftOpen, Plus, Repeat, Sparkles } from "lucide-react";
 import { Loader } from "@/components/ui/loader";
 import { TaskRequest, DailyTaskRequest, TaskInstanceRequest } from '@/features/tasks/types'
 import { Dialog, Transition } from "@headlessui/react";
 
 const TOOLNAME = "Task Manager";
-
-export const taskMap = [
-    { type: "single", label: "Single Task", icon: <ListTodo className="w-4 h-4" /> },
-    { type: "daily", label: "Daily Task", icon: <Repeat className="w-4 h-4" /> },
-    { type: "instance", label: "Task Instance", icon: <Sparkles className="w-4 h-4" /> },
-] as const;
 
 const priority = ["very high", "high", "medium", "low", "very low"]
 
