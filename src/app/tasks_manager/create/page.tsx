@@ -41,10 +41,10 @@ export default function CreateTaskPage() {
     const handleChange = (
         e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
     ) => {
-        const { name, value, type: inputType, checked } = e.target;
-
+        const { name, value, type: inputType } = e.target as HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;
         if (inputType === "checkbox" && name === "weekdays") {
-            const updated = checked
+            const input = e.target as HTMLInputElement;
+            const updated = input.checked
                 ? [...(form.weekdays || []), value]
                 : (form.weekdays || []).filter((day) => day !== value);
             setForm({ ...form, weekdays: updated });
@@ -122,8 +122,8 @@ export default function CreateTaskPage() {
                     <button
                         key={type}
                         className={`capitalize px-4 py-2 rounded ${typeParam === type
-                                ? "bg-purple-600 text-white"
-                                : "bg-gray-200 text-gray-800 hover:bg-gray-300"
+                            ? "bg-purple-600 text-white"
+                            : "bg-gray-200 text-gray-800 hover:bg-gray-300"
                             }`}
                         onClick={() => handleTabChange(type)}
                     >
