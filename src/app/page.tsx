@@ -2,13 +2,13 @@
 
 import { useEffect, useState } from "react";
 import Header from "@/components/Header";
-import { APP_NAME } from "@/constants/meta_data";
+import { APP_NAME, Tool } from "@/constants";
 import { fetchInstalledTools } from "@/features/tools/services/toolServices";
 import Link from "next/link";
 import { ChevronDown } from "lucide-react";
 
 export default function Home() {
-  const [tools, setTools] = useState<unknown[]>([]);
+  const [tools, setTools] = useState<Tool[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
